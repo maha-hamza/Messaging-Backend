@@ -7,8 +7,7 @@ import javax.sql.DataSource
 
 fun connectionPool(cfg: Config): DataSource {
     val config = HikariConfig().apply {
-       // driverClassName = cfg[postgres.driverClassName]
-        jdbcUrl = cfg[postgres.connectionString]
+        jdbcUrl = cfg[hdb.connectionString]
         connectionTimeout = 5000
         maximumPoolSize = 5
     }

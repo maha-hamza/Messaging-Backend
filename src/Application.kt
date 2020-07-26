@@ -64,7 +64,7 @@ fun Application.module() {
 
 val topLevelConfigs = arrayOf(
     Ktor,
-    postgres
+    hdb
 )
 
 object Ktor : ConfigSpec() {
@@ -77,7 +77,7 @@ object Ktor : ConfigSpec() {
     }
 }
 
-object postgres : ConfigSpec() {
+object hdb : ConfigSpec() {
     val driverClassName by required<String>()
     val connectionString by required<String>()
     val user by required<String>()

@@ -7,9 +7,9 @@ fun runMigrations(config: Config) {
     Flyway
         .configure()
         .dataSource(
-            config[postgres.connectionString],
-            config[postgres.user],
-            config[postgres.password]
+            config[hdb.connectionString],
+            config[hdb.user],
+            config[hdb.password]
         )
         .load()
         .migrate()

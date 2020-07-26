@@ -24,4 +24,5 @@ fun Routing.route() {
     get("/api/message/received/from-user", messageController::viewReceivedMessagesFromUser)
 
     post("/api/user", userController::createUser)
+    get("/api/user", userController::getAllUsers)
 }

@@ -18,6 +18,10 @@ class UserService : KoinComponent {
         }
     }
 
+    fun getAllUsers(): List<User> {
+        return repository.getAllUsers()
+    }
+
 }
 
 

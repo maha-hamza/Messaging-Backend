@@ -22,4 +22,12 @@ class UserController : KoinComponent {
             )
         )
     }
+
+    suspend fun getAllUsers(call: ApplicationCall) {
+
+        call.respond(
+            HttpStatusCode.OK,
+            userService.getAllUsers()
+        )
+    }
 }

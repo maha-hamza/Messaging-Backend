@@ -2,6 +2,7 @@ package messaging.user
 
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.select
+import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.joda.time.DateTime
 import org.koin.core.KoinComponent
@@ -35,5 +36,11 @@ class UserRepository : KoinComponent {
 
     fun getUserNickname(user: String): String {
         return Users.select { Users.id eq user }.map { it[Users.nickname] }.first()
+    }
+
+    fun getAllUsers(): List<User> {
+        return transaction {
+            Users.selectAll().map(::toUser)
+        }
     }
 }
