@@ -9,4 +9,6 @@ EXPOSE 8080
 
 RUN mkdir /app
 
-ENTRYPOINT ["java", "-XX:+UnlockExperimentalVMOptions", "-XX:+UseCGroupMemoryLimitForHeap", "-Djava.security.egd=file:/dev/./urandom","-jar","/app/messaging.jar"]
+COPY --from=build /home/gradle/src/build/libs/*.jar /app/Messaging.jar
+
+ENTRYPOINT ["java", "-XX:+UnlockExperimentalVMOptions", "-XX:+UseCGroupMemoryLimitForHeap", "-Djava.security.egd=file:/dev/./urandom","-jar","/app/Messaging.jar"]

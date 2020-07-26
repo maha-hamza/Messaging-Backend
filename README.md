@@ -36,7 +36,7 @@ and returned to client
 ###### How to start?
 * Please Generate self contained Jar (**gradle clean build** is good option :D )
 * Start the server by java -jar build/libs/Layer.jar
-* OR (Smart Docker ;) , Build Docker image : **docker build -t layer .** and Run it : **docker run -p 8080:8080 layer**
+* OR (Smart Docker ;) , Build Docker image : **docker build -t messaging .** and Run it : **docker run -p 8080:8080 messaging**
 * Use Curl or Insomnia (it's cool) to trigger your calls
 * Code is covered by Tests (Please approach me for clarifications)-(hit **./gradlew test** will not bite :D)
 * Hint , Use the following Endpoints to navigate (Don't worry you are almost covered)
