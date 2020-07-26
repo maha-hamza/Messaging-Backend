@@ -46,6 +46,35 @@ internal class MessageControllerTest : AbstractDBTest() {
     }
 
     @Test
+    fun `should not send message if text is blank`() {
+
+        handle(
+            uri = "/api/message",
+            method = HttpMethod.Post,
+            body = NewMessage(
+                text = ""
+            ),
+            headers = mapOf(
+                "from-user" to "sender",
+                "to-user" to "receiver"
+            )
+        ) {
+            assertThat(response)
+                .status(HttpStatusCode.BadRequest)
+                .contentType(JsonUtf8)
+                .body<String>()
+                .isEqualTo(
+                    """
+                    [ {
+                      "field" : "text",
+                      "type" : "NotBlank"
+                    } ]
+                """.trimIndent()
+                )
+        }
+    }
+
+    @Test
     fun `should not view all sent messages if userid is blank `() {
 
         handle(
