@@ -1,14 +1,18 @@
 package messaging.message
 
+import messaging.user.UserRepository
 import messaging.user.Users
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.joda.time.DateTime
 import org.koin.core.KoinComponent
+import org.koin.core.inject
 import java.time.Instant
 import java.util.*
 
 class MessageRepository : KoinComponent {
+
+    private val userRepository by inject<UserRepository>()
 
     fun insertMessage(
         message: String,
@@ -43,8 +47,8 @@ class MessageRepository : KoinComponent {
                         id = it[Messages.id],
                         createdAt = it[Messages.createdAt].let { Instant.ofEpochMilli(it.millis) },
                         text = it[Messages.text],
-                        fromUserNickName = Users.select { Users.id eq user!! }.map { it[Users.nickname] }.first(),
-                        toUserNickName = Users.selectAll().andWhere { Users.id eq to!! }.map { it[Users.nickname] }.first()
+                        fromUserNickName = userRepository.getUserNickname(user),
+                        toUserNickName = userRepository.getUserNickname(to)
                     )
                 }
         }
@@ -60,8 +64,8 @@ class MessageRepository : KoinComponent {
                         id = it[Messages.id],
                         createdAt = it[Messages.createdAt].let { Instant.ofEpochMilli(it.millis) },
                         text = it[Messages.text],
-                        fromUserNickName = Users.select { Users.id eq user!! }.map { it[Users.nickname] }.first(),
-                        toUserNickName = Users.selectAll().andWhere { Users.id eq it[Messages.toUser] }.map { it[Users.nickname] }.first()
+                        fromUserNickName = userRepository.getUserNickname(user),
+                        toUserNickName = userRepository.getUserNickname(it[Messages.toUser])
                     )
                 }
         }
@@ -71,15 +75,15 @@ class MessageRepository : KoinComponent {
         return transaction {
             Messages
                 .selectAll()
-                .andWhere { Messages.toUser eq user!! }
+                .andWhere { Messages.toUser eq user }
                 .orderBy(Messages.createdAt, SortOrder.DESC)
                 .map {
                     UserMessage(
                         id = it[Messages.id],
                         createdAt = it[Messages.createdAt].let { Instant.ofEpochMilli(it.millis) },
                         text = it[Messages.text],
-                        fromUserNickName = Users.selectAll().andWhere { Users.id eq it[Messages.fromUser] }.map { it[Users.nickname] }.first(),
-                        toUserNickName = Users.select { Users.id eq user!! }.map { it[Users.nickname] }.first()
+                        fromUserNickName = userRepository.getUserNickname(it[Messages.fromUser]),
+                        toUserNickName = userRepository.getUserNickname(user)
                     )
                 }
         }
@@ -92,16 +96,16 @@ class MessageRepository : KoinComponent {
         return transaction {
             Messages
                 .selectAll()
-                .andWhere { Messages.fromUser eq from!! }
-                .andWhere { Messages.toUser eq user!! }
+                .andWhere { Messages.fromUser eq from }
+                .andWhere { Messages.toUser eq user }
                 .orderBy(Messages.createdAt, SortOrder.DESC)
                 .map {
                     UserMessage(
                         id = it[Messages.id],
                         createdAt = it[Messages.createdAt].let { Instant.ofEpochMilli(it.millis) },
                         text = it[Messages.text],
-                        fromUserNickName = Users.selectAll().andWhere { Users.id eq from!! }.map { it[Users.nickname] }.first(),
-                        toUserNickName = Users.select { Users.id eq user!! }.map { it[Users.nickname] }.first()
+                        fromUserNickName = userRepository.getUserNickname(from),
+                        toUserNickName = userRepository.getUserNickname(user)
                     )
                 }
         }
