@@ -1,29 +1,35 @@
 package messaging.message
 
+import com.fasterxml.jackson.databind.ObjectMapper
+import config.MESSAGE_TOPIC
 import config.body
+import config.createProducer
 import io.ktor.application.ApplicationCall
 import io.ktor.http.HttpStatusCode
-import io.ktor.http.httpDateFormat
 import io.ktor.response.respond
+import org.apache.kafka.clients.producer.ProducerRecord
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 
 class MessageController : KoinComponent {
 
     private val messageService by inject<MessageService>()
+    private val producer = createProducer()
 
     suspend fun send(call: ApplicationCall) {
         val fromUser = call.request.headers["from-user"]
         val toUser = call.request.headers["to-user"]
         val message = call.body<NewMessage>()
+        val result = messageService.send(
+            message = message.validate(),
+            from = fromUser,
+            to = toUser
+        )
         call.respond(
             HttpStatusCode.Created,
-            messageService.send(
-                message = message.validate(),
-                from = fromUser,
-                to = toUser
-            )
+            result
         )
+        // producer?.send(ProducerRecord(MESSAGE_TOPIC, ObjectMapper().writeValueAsString(result)))
     }
 
     suspend fun viewAllSentMessages(call: ApplicationCall) {

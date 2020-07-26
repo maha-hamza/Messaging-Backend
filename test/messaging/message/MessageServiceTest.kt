@@ -254,6 +254,7 @@ class MessageServiceTest : AbstractDBTest(), KoinComponent {
 
         insertMessage(message = "Hello Friend1", from = user1.id, to = user2.id)
         val msg2 = insertMessage(message = "Hello Maha again", from = user3.id, to = user1.id)
+        Thread.sleep(1000)
         val msg3 = insertMessage(message = "Hello Maha", from = user2.id, to = user1.id)
 
         val result = service.viewAllReceivedMessages(
