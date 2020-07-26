@@ -63,7 +63,7 @@ dependencies {
     compile("io.github.microutils:kotlin-logging:1.7.6")
 
     //kafka
-    compile 'org.apache.kafka:kafka-clients:2.0.0'
+    compile 'org.apache.kafka:kafka-clients:2.5.0'
 
     //testing
     testCompile "org.assertj:assertj-core:$assertj_version"
