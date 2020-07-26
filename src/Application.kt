@@ -84,8 +84,19 @@ object hdb : ConfigSpec() {
     val password by required<String>()
 }
 
+object kafkaConfig: ConfigSpec() {
+    val broker by required<String>()
+    val topic by required<String>()
+}
+
 fun loadConfig(): Config {
     return Config { topLevelConfigs.forEach(::addSpec) }
         .from.hocon.resource("application.conf")
+}
+
+fun loadKafkaConfig(): Config{
+   return Config { arrayOf(kafkaConfig).forEach(::addSpec) }
+        .from.hocon
+        .resource("application.conf")
 }
 

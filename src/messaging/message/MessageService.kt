@@ -1,6 +1,10 @@
 package messaging.message
 
+import com.fasterxml.jackson.databind.ObjectMapper
+import config.MESSAGE_TOPIC
+import config.createProducer
 import messaging.user.UserRepository
+import org.apache.kafka.clients.producer.ProducerRecord
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 
@@ -12,6 +16,7 @@ class MessageService : KoinComponent {
 
     private val repository by inject<MessageRepository>()
     private val userRepository by inject<UserRepository>()
+    private val producer = createProducer()
 
     fun send(
         message: ValidatedNewMessage,
@@ -19,11 +24,13 @@ class MessageService : KoinComponent {
         to: String?
     ): Message {
         validateUserIds(from, to)
-        return repository.insertMessage(
+        val msg = repository.insertMessage(
             message = message.text,
             from = from!!,
             to = to!!
         )
+        producer.send(ProducerRecord(MESSAGE_TOPIC, ObjectMapper().writeValueAsString(msg))).get()
+        return msg
     }
 
     fun viewSentMessagesToParticularUser(user: String?, to: String?): List<UserMessage> {
