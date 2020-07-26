@@ -84,7 +84,9 @@ Message:
    MessageController -> line 32
    KafkaUtils -> lines 23/24 (They check is the topic exists, if not it create it so no message will be missed)
 
-
+###### To Enhance
+   I want to work in stabalizing the kafka configuration so we would have it uncommented. in general kafka is highly availabel framework
+   so downtime is not expected intensively in real life, but i don't like to risk it
 
 
 
